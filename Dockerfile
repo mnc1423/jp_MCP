@@ -10,5 +10,7 @@ COPY requirements.txt .
 # Install dependencies
 RUN pip install -r requirements.txt
 
+COPY app/ ./app
+
 # Start the training script
-CMD ["python", "jpp.py"]
+CMD ["python", "app/app.py"]
