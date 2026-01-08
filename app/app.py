@@ -1,24 +1,31 @@
 from fastmcp import FastMCP
 import requests
 import xml.etree.ElementTree as ET
+import os
 
-# 1. MCP 서버 초기화
+os.environ.get("DOTENV_PATH", os.path.join(os.path.dirname(__file__), ".env"))
+
 mcp = FastMCP("LegalAssistant")
 
-BASE_URL = "http://www.law.go.kr/DRF/lawSearch.do"
+BASE_URL = "http://www.law.go.kr/DRF/lawSearch.do?target=prec"
 
 
 @mcp.tool()
-def search_precedents(keyword: str) -> str:
-    """
-    특정 키워드와 관련된 법률 판례 목록을 검색합니다.
-    예: '층간소음', '전세사기', '음주운전'
-    """
+def search_precedents(
+    query: str,
+    search_type: int = 1,
+    display_count: int = 5,
+    sort_option: str = "ddes",
+    court_type: str = None,
+) -> str:
     params = {
-        "OC": LAW_API_KEY,
-        "target": "prec",  # 판례 검색
-        "type": "XML",
-        "query": keyword,
+        "OC": OC_ID,
+        "target": "prec",
+        "type": "JSON",  # 처리가 쉬운 JSON 선택
+        "search": search_type,
+        "query": query,
+        "display": display_count,
+        "sort": sort_option,
     }
 
     try:
